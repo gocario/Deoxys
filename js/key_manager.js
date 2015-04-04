@@ -1,8 +1,9 @@
 
-var KeyManager = function () {
+var KeyManager = function (domElement) {
 
-	document.addEventListener('keydown', function (e) { this.updateDown(e); }.bind(this), false);
-	document.addEventListener('keyup', function (e) { this.updateUp(e); }.bind(this), false);
+	var domElement = domElement || document;
+	domElement.addEventListener('keydown', function (e) { this.updateDown(e); }.bind(this), false);
+	domElement.addEventListener('keyup', function (e) { this.updateUp(e); }.bind(this), false);
 
 	this.up = false;
 	this.down = false;
@@ -33,24 +34,38 @@ KeyManager.prototype.updateDown = function (e) {
 		case 81:
 			this.left = true;
 			break;
-		case 32: this.space = true; break;
-		default: break;
+		case 32:
+			this.space = true;
+			break;
+		default:
+			break;
 	}
 };
 
 KeyManager.prototype.updateUp = function (e) {
 	// console.log("keyUp:" + e.which);
 	switch(e.which) {
-		case 38: this.up = false; break;
-		case 90: this.up = false; break;
-		case 40: this.down = false; break;
-		case 83: this.down = false; break;
-		case 39: this.right = false; break;
-		case 68: this.right = false; break;
-		case 37: this.left = false; break;
-		case 81: this.left = false; break;
-		case 32: this.space = false; break;
-		default: break;
+		case 38:
+		case 90:
+			this.up = false;
+			break;
+		case 40:
+		case 83:
+			this.down = false;
+			break;
+		case 39:
+		case 68:
+			this.right = false;
+			break;
+		case 37:
+		case 81:
+			this.left = false;
+			break;
+		case 32:
+			this.space = false;
+			break;
+		default:
+			break;
 	}
 };
 
