@@ -21,9 +21,9 @@ Object.prototype.constructor = Obstacle;
 
 Obstacle.prototype.update = function (elapsedTime) {
 	
-	this.animate();
-
 	this.speed += 0.1;
+
+	this.animate();
 };
 
 Obstacle.prototype.animate = function (elapsedTime) {
@@ -63,22 +63,27 @@ Ship.prototype.setSpeed = function (speed) {
 };
 
 Ship.prototype.update = function (elapsedTime) {
-	if(key.right) {
-		this.position.z += this.speed;
-		// console.log("droite ---- posZ = " + this.position.z);
+
+	this.direction.set(0, 0, 0);
+
+	if (key.right) {
+		this.direction.z += 1;
 	}
-	if(key.left) {
-		this.position.z -= this.speed;
-		// console.log("gauche ---- posZ = " + this.position.z);
+	if (key.left) {
+		this.direction.z -= 1;
 	}
 
 	if (key.up) {
-		this.position.y += this.speed;
-		// console.log("haut ---- posY = " + this.position.y);
+		this.direction.y += 1;
 	}
 	if (key.down) {
-		this.position.y -= this.speed;
-		// console.log("bas ---- posY = " + this.position.y);
+		this.direction.y -= 1;
 	}
+
+	this.animate();
 };
 
+Ship.prototype.animate = function (elapsedTime) {
+
+	this.position.add(this.direction.clone().multiplyScalar(this.speed));
+};

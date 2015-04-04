@@ -7,9 +7,7 @@ window.addEventListener('load', function () {
 		this.ship = null;
 		this.obstacles = [];
 
-
 		this.universeSize = new THREE.Vector3(1000, 500, 500);
-		
 
 		this.scenary = new Scenary();
 		this.scenary.createGUI(this);
@@ -23,13 +21,23 @@ window.addEventListener('load', function () {
 		var mesh = new THREE.Mesh(geometry, material);
 		this.scenary.add(mesh);
 		mesh.position.setVector(new THREE.Vector3(this.universeSize.x / 2, this.universeSize.y / 2, this.universeSize.z / 2));
-
-		this.generateShip();
-		this.update();
 	};
 
 	Game.prototype = new Object;
 	Game.prototype.constructor = Game;
+
+	Game.prototype.start = function () {
+
+		this.initialize();
+	};
+
+	Game.prototype.initialize = function() {
+
+		this.generateShip();
+		this.update();
+
+		this.isRunning = true;
+	};
 
 
 	Game.prototype.generateShip = function () {
@@ -49,7 +57,15 @@ window.addEventListener('load', function () {
 
 		return ship;
 
-	}
+	};
+
+	Game.prototype.clearShip = function () {
+		
+		this.scenary.remove(this.ship.mesh);
+		this.ship = null;
+	};
+
+
 	Game.prototype.generateObstacle = function () {
 		
 		var data = {
@@ -71,7 +87,6 @@ window.addEventListener('load', function () {
 		return obstacle;
 	};
 
-
 	Game.prototype.clearObstacle = function (idx) {
 		
 		this.scenary.remove(this.obstacles[idx].mesh);
@@ -88,7 +103,11 @@ window.addEventListener('load', function () {
 
 	Game.prototype.over = function () {
 		
-		alert('Vous avez perdu');
+		this.isRunning = false;
+
+		this.clearObstacles();
+		this.clearShip();
+		this.initialize();
 	};
 
 	Game.prototype.update = function (elapsedTime) {
@@ -97,39 +116,42 @@ window.addEventListener('load', function () {
 	
 		var elapsedTime = clock.getElapsedTime();
 
+		if (this.isRunning) {
 
-		// Mettre à jour le vaisseau et les obstacles
+			// Mettre à jour le vaisseau et les obstacles
 
-		var ship = this.ship;
+			var ship = this.ship;
 
-		this.ship.update(elapsedTime);
+			this.ship.update(elapsedTime);
 
 
-		for (var i = 0; i < this.obstacles.length; i++) {
-			var obstacle = this.obstacles[i];
+			for (var i = 0; i < this.obstacles.length; i++) {
+				var obstacle = this.obstacles[i];
 
-			obstacle.update(elapsedTime);
+				obstacle.update(elapsedTime);
 
-			// Si hors map, on le décharge
-			if (obstacle.position.x < obstacle.radius) {
+				// Si hors map, on le décharge
+				if (obstacle.position.x < obstacle.radius) {
 
-				this.clearObstacle(i--);
+					this.clearObstacle(i--);
+				}
+
+				if (obstacle.position.clone().sub(ship.position).length() < ship.radius + obstacle.radius) {
+					// console.log('Collision occured!');
+
+					this.over();
+				}
 			}
 
-			if (obstacle.position.clone().sub(ship.position).length() < ship.radius + obstacle.radius) {
-				// console.log('Collision occured!');
+			// Créé des obstacles
 
-				this.over();
+			if (Math.random() > 0.90) {
+				this.generateObstacle();
 			}
+
+			this.scenary.lookAtMoveTo(this.ship.position, this.ship.position.clone().addX(-100).addY(20));
+
 		}
-
-		// Créé des obstacles
-
-		if (Math.random() > 0.95) {
-			this.generateObstacle();
-		}
-		this.scenary.lookAtMoveTo(this.ship.position, this.ship.position.clone().addX(-100).addY(20));
-
 
 		this.scenary.update(elapsedTime);
 	};
@@ -138,4 +160,5 @@ window.addEventListener('load', function () {
 	var clock = new THREE.Clock();
 
 	game = new Game();
+	game.start();
 });
