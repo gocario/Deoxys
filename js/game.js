@@ -16,6 +16,8 @@ window.addEventListener('load', function () {
 			new THREE.Vector3(- this.universeSize.x / 32, this.universeSize.y / 16, this.universeSize.z / 2)
 		);
 
+
+		// Box, for tests
 		var geometry = new THREE.BoxGeometry(this.universeSize.x, this.universeSize.y, this.universeSize.z);
 		var material = new THREE.MeshBasicMaterial({ color: 0xEEEE88, transparent: true, opacity: 0.1});
 		var mesh = new THREE.Mesh(geometry, material);
@@ -28,15 +30,18 @@ window.addEventListener('load', function () {
 
 	Game.prototype.start = function () {
 
-		this.initialize();
-	};
-
-	Game.prototype.initialize = function() {
-
 		this.generateShip();
 		this.update();
 
 		this.isRunning = true;
+	};
+
+	Game.prototype.stop = function() {
+
+		this.isRunning = false;
+
+		this.clearShip();
+		this.clearObstacles();
 	};
 
 
@@ -103,14 +108,12 @@ window.addEventListener('load', function () {
 
 	Game.prototype.over = function () {
 		
-		this.isRunning = false;
+		this.stop();
 
-		this.clearObstacles();
-		this.clearShip();
-		this.initialize();
+		this.start();
 	};
 
-	Game.prototype.update = function (elapsedTime) {
+	Game.prototype.update = function () {
 
 		window.requestAnimationFrame(this.update.bind(this));
 	
