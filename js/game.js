@@ -23,6 +23,8 @@ window.addEventListener('load', function () {
 		var mesh = new THREE.Mesh(geometry, material);
 		this.scenary.add(mesh);
 		mesh.position.setVector(new THREE.Vector3(this.universeSize.x / 2, this.universeSize.y / 2, this.universeSize.z / 2));
+
+		this.update();
 	};
 
 	Game.prototype = new Object;
@@ -30,8 +32,9 @@ window.addEventListener('load', function () {
 
 	Game.prototype.start = function () {
 
+		this.difficulty = 1.0;
+
 		this.generateShip();
-		this.update();
 
 		this.isRunning = true;
 	};
@@ -75,10 +78,11 @@ window.addEventListener('load', function () {
 		
 		var data = {
 			xMin: this.universeSize.x - 10, xMax: this.universeSize.x - 9,
-			yMin: 10, yMax: 11,
-			zMin: 10, zMax: this.universeSize.y - 10,
+			yMin: 10, yMax: this.universeSize.y - 10,
+			zMin: 10, zMax: this.universeSize.z - 10,
 			color: 0xFF8800,
-			radius: 10,
+			radius: 10 * this.difficulty,
+			speed: 4.0 * this.difficulty * 1.25,
 		};
 
 		var obstacle = new Obstacle(data);
@@ -121,12 +125,24 @@ window.addEventListener('load', function () {
 
 		if (this.isRunning) {
 
+
 			// Mettre à jour le vaisseau et les obstacles
 
 			var ship = this.ship;
 
-			this.ship.update(elapsedTime);
+			ship.update(elapsedTime);
 
+			if (ship.position.y < ship.radius) {
+				ship.position.setY(ship.radius);
+			} else if (ship.position.y > this.universeSize.y - ship.radius) {
+				ship.position.setY(this.universeSize.y - ship.radius);
+			}
+
+			if (ship.position.z < ship.radius) {
+				ship.position.setZ(ship.radius);
+			} else if (ship.position.z > this.universeSize.z - ship.radius) {
+				ship.position.setZ(this.universeSize.z - ship.radius);
+			}
 
 			for (var i = 0; i < this.obstacles.length; i++) {
 				var obstacle = this.obstacles[i];
@@ -148,12 +164,13 @@ window.addEventListener('load', function () {
 
 			// Créé des obstacles
 
-			if (Math.random() > 0.90) {
+			if (Math.random() < 0.50 * this.difficulty) {
 				this.generateObstacle();
 			}
 
-			this.scenary.lookAtMoveTo(this.ship.position, this.ship.position.clone().addX(-100).addY(20));
+			this.scenary.lookAtMoveTo(this.ship.position, this.ship.position.clone().addX(-100));
 
+			this.difficulty += 0.0001;
 		}
 
 		this.scenary.update(elapsedTime);

@@ -12,7 +12,7 @@ var Obstacle = function (data) {
 
 		this.position = this.mesh.position;
 		this.direction = new THREE.Vector3(-1, 0, 0);
-		this.speed = 4.0;
+		this.speed = data.speed || 4.0;
 	}
 };
 
@@ -68,6 +68,7 @@ Ship.prototype.update = function (elapsedTime) {
 
 	if (key.right) {
 		this.direction.z += 1;
+		console.log('To right -> ', this.position.z);
 	}
 	if (key.left) {
 		this.direction.z -= 1;
