@@ -8,6 +8,31 @@ Math.randomInt = function (min, max) {
 	return Math.floor(Math.randomFloat(min, max));
 }
 
+THREE.Vector3.prototype.addX = function (x) {
+
+	this.x += x;
+
+	return this;
+
+},
+
+THREE.Vector3.prototype.addY = function (y) {
+
+	this.y += y;
+
+	return this;
+
+};
+
+THREE.Vector3.prototype.addZ = function (z) {
+
+	this.z += z;
+
+	return this;
+
+};
+
+
 THREE.Vector3.prototype.setVector = function (v) {
 
 	this.x = v.x;
@@ -27,8 +52,3 @@ THREE.Vector3.generateRandom = function (xMin, xMax, yMin, yMax, zMin, zMax) {
 	);
 }
 
-
-THREE.Vector3.zero = function () {
-
-	return new THREE.Vector3(0, 0, 0);
-}

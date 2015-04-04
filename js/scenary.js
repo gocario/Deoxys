@@ -27,7 +27,7 @@ Scenary.prototype.createScene = function () {
 Scenary.prototype.createCamera = function () {
 
 	/** Camera **/
-	this.camera = new THREE.PerspectiveCamera(100, window.innerWidth / window.innerHeight, 1, 1000);
+	this.camera = new THREE.PerspectiveCamera(100, window.innerWidth / window.innerHeight, 1, 10000);
 
 	this.camera.position.set(200, 200, 200);
 

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8" />
+	<title>Deoxys</title>
+	<script src="js/lib/three.min.js"></script>
+	<script src="js/key_manager.js"></script>
+	<script src="js/ship.js"></script>
+</head>
+
+<body>
+	<script type="text/javascript">
+		var player = new Ship();
+
+		function update() {
+			player.update();
+			window.requestAnimationFrame(this.update.bind(this));
+		}
+
+		update();
+	</script>
+</body>
