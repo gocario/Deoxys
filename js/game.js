@@ -70,7 +70,8 @@ window.addEventListener('load', function () {
 	Game.prototype.clearShip = function () {
 		
 		this.scenary.remove(this.ship.mesh);
-		this.ship = null;
+		this.scenary.deallocateObject(this.ship.mesh);
+		this.ship = undefined;
 	};
 
 
@@ -99,6 +100,8 @@ window.addEventListener('load', function () {
 	Game.prototype.clearObstacle = function (idx) {
 		
 		this.scenary.remove(this.obstacles[idx].mesh);
+		this.scenary.deallocateObject(this.obstacles[idx].mesh);
+		this.obstacles[idx] = undefined
 		this.obstacles.splice(idx, 1);
 	};
 

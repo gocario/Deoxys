@@ -71,6 +71,10 @@ Scenary.prototype.remove = function (obj) {
 	this.scene.remove(obj);
 };
 
+Scenary.prototype.deallocateObject = function (obj) {
+	
+	this.renderer.deallocateObject(obj);
+};
 
 Scenary.prototype.lookAtMoveTo = function (at, to) {
 	
